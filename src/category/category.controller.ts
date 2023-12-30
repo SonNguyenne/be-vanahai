@@ -10,8 +10,6 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
 import { CategoryDto } from './dto/category.dto';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @ApiTags('category')
 @Controller('category')

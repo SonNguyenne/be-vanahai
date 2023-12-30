@@ -8,9 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { PageContentService } from './page-content.service';
-import { CreatePageContentDto } from './dto/create-page-content.dto';
-import { UpdatePageContentDto } from './dto/update-page-content.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { PageContentDto } from './dto/page-content.dto';
 
 @ApiTags('page-content')
 @Controller('page-content')
@@ -18,7 +17,7 @@ export class PageContentController {
   constructor(private readonly pageContentService: PageContentService) {}
 
   @Post()
-  create(@Body() createPageContentDto: CreatePageContentDto) {
+  create(@Body() createPageContentDto: PageContentDto) {
     return this.pageContentService.create(createPageContentDto);
   }
 
@@ -29,19 +28,19 @@ export class PageContentController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.pageContentService.findOne(+id);
+    return this.pageContentService.findOne(id);
   }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updatePageContentDto: UpdatePageContentDto,
+    @Body() updatePageContentDto: PageContentDto,
   ) {
-    return this.pageContentService.update(+id, updatePageContentDto);
+    return this.pageContentService.update(id, updatePageContentDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.pageContentService.remove(+id);
+    return this.pageContentService.remove(id);
   }
 }

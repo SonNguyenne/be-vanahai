@@ -1,26 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { CreateContactDto } from './dto/create-contact.dto';
-import { UpdateContactDto } from './dto/update-contact.dto';
+import { ContactDto } from './dto/contact.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ContactService {
-  create(createContactDto: CreateContactDto) {
-    return 'This action adds a new contact';
+  constructor(private prisma: PrismaService) {}
+  async create(createContactDto: ContactDto) {
+    return await this.prisma.contact.create({
+      data: {
+        name: createContactDto.name.trim(),
+        email: createContactDto.name.trim(),
+        subject: createContactDto.name.trim(),
+        message: createContactDto.name.trim(),
+       },
+    });
   }
 
-  findAll() {
-    return `This action returns all contact`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} contact`;
-  }
-
-  update(id: number, updateContactDto: UpdateContactDto) {
-    return `This action updates a #${id} contact`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} contact`;
+  async findAll() {
+    return await this.prisma.contact.findMany();
   }
 }

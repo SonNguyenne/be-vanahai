@@ -1,26 +1,43 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePageImageDto } from './dto/create-page-image.dto';
-import { UpdatePageImageDto } from './dto/update-page-image.dto';
+import { PageImageDto } from './dto/page-image.dto';
+
+
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PageImageService {
-  create(createPageImageDto: CreatePageImageDto) {
-    return 'This action adds a new pageImage';
+  constructor(private prisma: PrismaService) {}
+  async create(createPageImageDto: PageImageDto) {
+    if (!createPageImageDto.slug)
+      throw new BadRequestException('Name cannot be empty');
+
+    return await this.prisma.pageImage.create({
+      data: {
+        slug: createPageImageDto.slug.trim(),
+        image: createPageImageDto.image.trim(),
+        page: createPageImageDto.page.trim() 
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all pageImage`;
+  async findAll() {
+    return await this.prisma.pageImage.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pageImage`;
+  async findOne(id: string) {
+    return await this.prisma.pageImage.findUnique({ where: { id } });
   }
 
-  update(id: number, updatePageImageDto: UpdatePageImageDto) {
-    return `This action updates a #${id} pageImage`;
+  async update(id: string, updatePageImageDto: PageImageDto) {
+    return await this.prisma.pageImage.update({
+      where: { id },
+      data: {
+        image: updatePageImageDto.image.trim(),
+      }
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pageImage`;
+  async remove(id: string) {
+    return await this.prisma.pageImage.delete({ where: { id } });
   }
 }

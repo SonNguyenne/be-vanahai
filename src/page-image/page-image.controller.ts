@@ -1,8 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { PageImageService } from './page-image.service';
-import { CreatePageImageDto } from './dto/create-page-image.dto';
-import { UpdatePageImageDto } from './dto/update-page-image.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { PageImageDto } from './dto/page-image.dto';
 
 @ApiTags('page-image')
 @Controller('page-image')
@@ -10,7 +9,7 @@ export class PageImageController {
   constructor(private readonly pageImageService: PageImageService) {}
 
   @Post()
-  create(@Body() createPageImageDto: CreatePageImageDto) {
+  create(@Body() createPageImageDto: PageImageDto) {
     return this.pageImageService.create(createPageImageDto);
   }
 
@@ -21,16 +20,16 @@ export class PageImageController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.pageImageService.findOne(+id);
+    return this.pageImageService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePageImageDto: UpdatePageImageDto) {
-    return this.pageImageService.update(+id, updatePageImageDto);
+  update(@Param('id') id: string, @Body() updatePageImageDto: PageImageDto) {
+    return this.pageImageService.update(id, updatePageImageDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.pageImageService.remove(+id);
+    return this.pageImageService.remove(id);
   }
 }
