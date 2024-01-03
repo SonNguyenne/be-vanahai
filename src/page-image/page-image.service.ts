@@ -1,21 +1,21 @@
 import { PageImageDto } from './dto/page-image.dto';
-
-
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PageImageService {
   constructor(private prisma: PrismaService) {}
-  async create(createPageImageDto: PageImageDto) {
+  async create(image: Express.Multer.File, createPageImageDto: PageImageDto) {
     if (!createPageImageDto.slug)
       throw new BadRequestException('Name cannot be empty');
 
+    const imageBuffer = image.buffer;
+    const imageData = Buffer.from(imageBuffer).toString('base64');
     return await this.prisma.pageImage.create({
       data: {
         slug: createPageImageDto.slug.trim(),
-        image: createPageImageDto.image.trim(),
-        page: createPageImageDto.page.trim() 
+        image: `data:image/png;base64,${imageData}`,
+        page: createPageImageDto.page.trim(),
       },
     });
   }
@@ -33,7 +33,7 @@ export class PageImageService {
       where: { id },
       data: {
         image: updatePageImageDto.image.trim(),
-      }
+      },
     });
   }
 

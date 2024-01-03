@@ -1,7 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { PageImageService } from './page-image.service';
 import { ApiTags } from '@nestjs/swagger';
 import { PageImageDto } from './dto/page-image.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('page-image')
 @Controller('page-image')
@@ -9,8 +20,12 @@ export class PageImageController {
   constructor(private readonly pageImageService: PageImageService) {}
 
   @Post()
-  create(@Body() createPageImageDto: PageImageDto) {
-    return this.pageImageService.create(createPageImageDto);
+  @UseInterceptors(FileInterceptor('image'))
+  create(
+    @UploadedFile() image: Express.Multer.File,
+    @Body() createPageImageDto: PageImageDto,
+  ) {
+    return this.pageImageService.create(image, createPageImageDto);
   }
 
   @Get()
