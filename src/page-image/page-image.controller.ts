@@ -39,8 +39,12 @@ export class PageImageController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePageImageDto: PageImageDto) {
-    return this.pageImageService.update(id, updatePageImageDto);
+  update(
+    @Param('id') id: string,
+    @UploadedFile() image: Express.Multer.File,
+    @Body() updatePageImageDto: PageImageDto,
+  ) {
+    return this.pageImageService.update(id, image, updatePageImageDto);
   }
 
   @Delete(':id')

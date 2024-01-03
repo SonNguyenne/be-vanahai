@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class ProductService {
   constructor(private prisma: PrismaService) {}
-  async create(createProductDto: ProductDto) {
+  async create(image: Express.Multer.File, createProductDto: ProductDto) {
     if (!createProductDto.name)
       throw new BadRequestException('Name cannot be empty');
     if (!createProductDto.price)
@@ -17,21 +17,23 @@ export class ProductService {
     if (!createProductDto.categoryId)
       throw new BadRequestException('Category cannot be empty');
 
-   try  { 
-    return await this.prisma.product.create({
-      data: { 
-        name: createProductDto.name.trim(),
-        price: createProductDto.price, 
-        image: createProductDto.image.trim(), 
-        isBestSeller: createProductDto.isBestSeller, 
-        isDiscount: createProductDto.isDiscount, 
-        discountPrice: createProductDto.discountPrice, 
-        categoryId: createProductDto.categoryId.trim()
-      }
-    });
-       } catch(err)  {
-        console.log(err)
-      }
+    const imageBuffer = image.buffer;
+    const imageData = Buffer.from(imageBuffer).toString('base64');
+    try {
+      return await this.prisma.product.create({
+        data: {
+          name: createProductDto.name.trim(),
+          price: createProductDto.price,
+          image: `data:image/png;base64,${imageData}`,
+          isBestSeller: createProductDto.isBestSeller,
+          isDiscount: createProductDto.isDiscount,
+          discountPrice: createProductDto.discountPrice,
+          categoryId: createProductDto.categoryId.trim(),
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async findAll() {
@@ -40,20 +42,25 @@ export class ProductService {
 
   async findOne(id: string) {
     return await this.prisma.product.findUnique({ where: { id } });
-
   }
 
-  async update(id: string, updateProductDto: ProductDto) {
+  async update(
+    id: string,
+    image: Express.Multer.File,
+    updateProductDto: ProductDto,
+  ) {
+    const imageBuffer = image.buffer;
+    const imageData = Buffer.from(imageBuffer).toString('base64');
     return await this.prisma.product.update({
       where: { id },
-      data: { 
+      data: {
         name: updateProductDto.name.trim(),
-        price: updateProductDto.price, 
-        image: updateProductDto.image.trim(), 
-        isBestSeller: updateProductDto.isBestSeller, 
-        isDiscount: updateProductDto.isDiscount, 
-        discountPrice: updateProductDto.discountPrice, 
-        categoryId: updateProductDto.categoryId.trim()
+        price: updateProductDto.price,
+        image: `data:image/png;base64,${imageData}`,
+        isBestSeller: updateProductDto.isBestSeller,
+        isDiscount: updateProductDto.isDiscount,
+        discountPrice: updateProductDto.discountPrice,
+        categoryId: updateProductDto.categoryId.trim(),
       },
     });
   }

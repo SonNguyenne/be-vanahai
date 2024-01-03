@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UploadedFile,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -17,8 +18,11 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  create(@Body() createProductDto: ProductDto) {
-    return this.productService.create(createProductDto);
+  create(
+    @UploadedFile() image: Express.Multer.File,
+    @Body() createProductDto: ProductDto,
+  ) {
+    return this.productService.create(image, createProductDto);
   }
 
   @Get()
@@ -32,8 +36,12 @@ export class ProductController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: ProductDto) {
-    return this.productService.update(id, updateProductDto);
+  update(
+    @Param('id') id: string,
+    @UploadedFile() image: Express.Multer.File,
+    @Body() updateProductDto: ProductDto,
+  ) {
+    return this.productService.update(id, image, updateProductDto);
   }
 
   @Delete(':id')

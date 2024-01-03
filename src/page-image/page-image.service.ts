@@ -28,11 +28,19 @@ export class PageImageService {
     return await this.prisma.pageImage.findUnique({ where: { id } });
   }
 
-  async update(id: string, updatePageImageDto: PageImageDto) {
+  async update(
+    id: string,
+    image: Express.Multer.File,
+    updatePageImageDto: PageImageDto,
+  ) {
+    const imageBuffer = image.buffer;
+    const imageData = Buffer.from(imageBuffer).toString('base64');
     return await this.prisma.pageImage.update({
       where: { id },
       data: {
-        image: updatePageImageDto.image.trim(),
+        slug: updatePageImageDto.slug.trim(),
+        image: `data:image/png;base64,${imageData}`,
+        page: updatePageImageDto.page.trim(),
       },
     });
   }
