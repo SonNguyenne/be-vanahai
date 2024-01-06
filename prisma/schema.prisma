@@ -17,9 +17,9 @@ model Product {
   image         String
   isBestSeller  Boolean
   isDiscount    Boolean
-  discountPrice String
+  discountPrice Float
   categoryId    String   @db.ObjectId
-  category      Category @relation(fields: [categoryId], references: [id])
+  category      Category @relation(fields: [categoryId],references: [id],onDelete:Cascade)
 }
 
 model Category {

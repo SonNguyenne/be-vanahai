@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
   UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ApiTags } from '@nestjs/swagger';
 import { ProductDto } from './dto/product.dto';
+import { FileInterceptor } from '@nestjs/platform-express/multer';
 
 @ApiTags('product')
 @Controller('product')
@@ -18,10 +20,12 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
+  @UseInterceptors(FileInterceptor('image'))
   create(
     @UploadedFile() image: Express.Multer.File,
     @Body() createProductDto: ProductDto,
   ) {
+    console.log('create', image, createProductDto);
     return this.productService.create(image, createProductDto);
   }
 
@@ -36,6 +40,7 @@ export class ProductController {
   }
 
   @Patch(':id')
+  @UseInterceptors(FileInterceptor('image'))
   update(
     @Param('id') id: string,
     @UploadedFile() image: Express.Multer.File,

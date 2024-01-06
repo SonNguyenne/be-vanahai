@@ -8,12 +8,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ProductService {
   constructor(private prisma: PrismaService) {}
   async create(image: Express.Multer.File, createProductDto: ProductDto) {
-    if (!createProductDto.name)
-      throw new BadRequestException('Name cannot be empty');
-    if (!createProductDto.price)
-      throw new BadRequestException('Price cannot be empty');
-    if (!createProductDto.image)
-      throw new BadRequestException('Image cannot be empty');
+    if (!image) throw new BadRequestException('Image cannot be empty');
     if (!createProductDto.categoryId)
       throw new BadRequestException('Category cannot be empty');
 
@@ -23,12 +18,12 @@ export class ProductService {
       return await this.prisma.product.create({
         data: {
           name: createProductDto.name.trim(),
-          price: createProductDto.price,
-          image: `data:image/png;base64,${imageData}`,
-          isBestSeller: createProductDto.isBestSeller,
-          isDiscount: createProductDto.isDiscount,
-          discountPrice: createProductDto.discountPrice,
+          price: Number(createProductDto.price),
+          isBestSeller: Boolean(createProductDto.isBestSeller),
+          isDiscount: Boolean(createProductDto.isDiscount),
+          discountPrice: Number(createProductDto?.discountPrice),
           categoryId: createProductDto.categoryId.trim(),
+          image: `data:image/png;base64,${imageData}`,
         },
       });
     } catch (err) {
@@ -49,19 +44,41 @@ export class ProductService {
     image: Express.Multer.File,
     updateProductDto: ProductDto,
   ) {
-    const imageBuffer = image.buffer;
-    const imageData = Buffer.from(imageBuffer).toString('base64');
+    let imageData;
+    const updateData: Record<string, any> = {};
+    if (image) {
+      imageData = Buffer.from(image.buffer).toString('base64');
+    }
+    if (updateProductDto.name) {
+      updateData.name = updateProductDto.name.trim();
+    }
+
+    if (updateProductDto.price) {
+      updateData.price = Number(updateProductDto.price);
+    }
+
+    if (imageData || image) {
+      updateData.image = `data:image/png;base64,${imageData}`;
+    }
+
+    if (updateProductDto.isBestSeller !== undefined) {
+      updateData.isBestSeller = Boolean(updateProductDto.isBestSeller);
+    }
+
+    if (updateProductDto.isDiscount !== undefined) {
+      updateData.isDiscount = Boolean(updateProductDto.isDiscount);
+    }
+
+    if (updateProductDto.discountPrice) {
+      updateData.discountPrice = Number(updateProductDto.discountPrice);
+    }
+
+    if (updateProductDto.categoryId) {
+      updateData.categoryId = updateProductDto.categoryId.trim();
+    }
     return await this.prisma.product.update({
       where: { id },
-      data: {
-        name: updateProductDto.name.trim(),
-        price: updateProductDto.price,
-        image: `data:image/png;base64,${imageData}`,
-        isBestSeller: updateProductDto.isBestSeller,
-        isDiscount: updateProductDto.isDiscount,
-        discountPrice: updateProductDto.discountPrice,
-        categoryId: updateProductDto.categoryId.trim(),
-      },
+      data: updateData,
     });
   }
 

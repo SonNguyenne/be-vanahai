@@ -25,11 +25,12 @@ export class CategoryService {
   async update(id: string, updateCategoryDto: CategoryDto) {
     return await this.prisma.category.update({
       where: { id },
-      data:  { name: updateCategoryDto.name.trim() },
+      data: { name: updateCategoryDto.name.trim() },
     });
   }
 
   async remove(id: string) {
+    this.prisma.product.deleteMany({ where: { categoryId: id } });
     return this.prisma.category.delete({ where: { id } });
   }
 }
