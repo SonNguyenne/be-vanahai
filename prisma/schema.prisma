@@ -30,14 +30,14 @@ model Category {
 
 model PageImage {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
-  slug  String @unique
+  slug  String 
   image String
   page  String
 }
 
 model PageContent {
   id      String @id @default(auto()) @map("_id") @db.ObjectId
-  slug    String @unique
+  slug    String 
   content String
   page    String
 }

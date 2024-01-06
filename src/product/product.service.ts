@@ -19,8 +19,8 @@ export class ProductService {
         data: {
           name: createProductDto.name.trim(),
           price: Number(createProductDto.price),
-          isBestSeller: Boolean(createProductDto.isBestSeller),
-          isDiscount: Boolean(createProductDto.isDiscount),
+          isBestSeller: /true/.test(createProductDto.isBestSeller.toString()),
+          isDiscount: /true/.test(createProductDto.isDiscount.toString()),
           discountPrice: Number(createProductDto?.discountPrice),
           categoryId: createProductDto.categoryId.trim(),
           image: `data:image/png;base64,${imageData}`,
@@ -62,11 +62,15 @@ export class ProductService {
     }
 
     if (updateProductDto.isBestSeller !== undefined) {
-      updateData.isBestSeller = Boolean(updateProductDto.isBestSeller);
+      updateData.isBestSeller = /true/.test(
+        updateProductDto.isBestSeller.toString(),
+      );
     }
 
     if (updateProductDto.isDiscount !== undefined) {
-      updateData.isDiscount = Boolean(updateProductDto.isDiscount);
+      updateData.isDiscount = /true/.test(
+        updateProductDto.isDiscount.toString(),
+      );
     }
 
     if (updateProductDto.discountPrice) {
