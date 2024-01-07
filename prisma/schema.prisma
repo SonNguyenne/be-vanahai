@@ -26,6 +26,7 @@ model Category {
   id      String    @id @default(auto()) @map("_id") @db.ObjectId
   Product Product[]
   name    String
+  estName String?
 }
 
 model PageImage {
