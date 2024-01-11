@@ -19,7 +19,7 @@ model Product {
   isDiscount    Boolean
   discountPrice Float
   categoryId    String   @db.ObjectId
-  category      Category @relation(fields: [categoryId],references: [id],onDelete:Cascade)
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 }
 
 model Category {
@@ -31,23 +31,31 @@ model Category {
 
 model PageImage {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
-  slug  String 
+  slug  String
   image String
   page  String
 }
 
 model PageContent {
   id      String @id @default(auto()) @map("_id") @db.ObjectId
-  slug    String 
+  slug    String
   content String
   page    String
 }
 
 model Contact {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  name    String
-  email   String
-  subject String
-  message String
-  createdAt     DateTime        @default(now()) 
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model New {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  createdAt   DateTime @default(now())
+  description String?
+  image       String
 }

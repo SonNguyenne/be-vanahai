@@ -7,6 +7,7 @@ import { PageContentModule } from './page-content/page-content.module';
 import { ContactModule } from './contact/contact.module';
 import { CategoryModule } from './category/category.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { NewModule } from './new/new.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PrismaModule } from './prisma/prisma.module';
     ContactModule,
     CategoryModule,
     PrismaModule,
+    NewModule,
   ],
   controllers: [AppController],
   providers: [AppService],
