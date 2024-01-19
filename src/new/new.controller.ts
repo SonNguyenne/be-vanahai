@@ -16,7 +16,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { NewDto } from './dto/new.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-@ApiTags('new')
+@ApiTags('information')
 @Controller('new')
 export class NewController {
   constructor(private readonly newService: NewService) {}
