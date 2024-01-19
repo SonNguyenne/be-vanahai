@@ -8,7 +8,7 @@ export class NewService {
   async create(image: Express.Multer.File, createNewDto: NewDto) {
     const imageBuffer = image.buffer;
     const imageData = Buffer.from(imageBuffer).toString('base64');
-    return await this.prisma.information.create({
+    return await this.prisma.informationNew.create({
       data: {
         name: createNewDto.name.trim(),
         image: `data:image/png;base64,${imageData}`,
@@ -20,11 +20,11 @@ export class NewService {
   }
 
   async findAll() {
-    return await this.prisma.information.findMany();
+    return await this.prisma.informationNew.findMany();
   }
 
   async findOne(id: string) {
-    return await this.prisma.information.findUnique({ where: { id } });
+    return await this.prisma.informationNew.findUnique({ where: { id } });
   }
 
   async update(id: string, image: Express.Multer.File, updateNewDto: NewDto) {
@@ -45,13 +45,13 @@ export class NewService {
       updateData.image = `data:image/png;base64,${imageData}`;
     }
 
-    return await this.prisma.information.update({
+    return await this.prisma.informationNew.update({
       where: { id },
       data: updateData,
     });
   }
 
   async remove(id: string) {
-    return this.prisma.information.delete({ where: { id } });
+    return this.prisma.informationNew.delete({ where: { id } });
   }
 }
