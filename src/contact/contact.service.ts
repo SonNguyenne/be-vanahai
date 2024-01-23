@@ -9,10 +9,10 @@ export class ContactService {
     return await this.prisma.contact.create({
       data: {
         name: createContactDto.name.trim(),
-        email: createContactDto.name.trim(),
-        subject: createContactDto.name.trim(),
-        message: createContactDto.name.trim(),
-       },
+        email: createContactDto.email.trim(),
+        subject: createContactDto.subject.trim(),
+        message: createContactDto.message.trim(),
+      },
     });
   }
 
